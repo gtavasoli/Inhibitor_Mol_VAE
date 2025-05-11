@@ -16,7 +16,7 @@ This repo contains the codebase for generating Corrosion Inhibitor Molecules usi
 ## Before training
 run all codes of 0-preprocessData.ipynb to generate the training datasets including the following files:
 
-![alt text](image-2.png)
+![alt text](images/image-2.png)
 
 
 ## Training
@@ -50,17 +50,17 @@ If you want to train using SMILES and propotion files, you need to set --propert
 
 If you want to train using transvae model, you need to modify the following code of ransvae/trans_models.py, for example, the number of propotion is 9, then the self.src_len = 134, self.tgt_len = 133
 
-![alt text](image-4.png)
+![alt text](images/image-4.png)
 
  ## Generate new Corrosion Inhibitor Molecules
 
  run the code of 0-preprocessData.ipynb as following.
-![alt text](image-3.png)
+![alt text](images/image-3.png)
 
 ## calculate_HOMO-LUMO
 (1) The SMILES hydrogenated into rough 3D molecular structure by RDKit, performed a rough structure optimization based on MMFF, and saved the molecular structure in.mol file.
 run the following code of 1-calculate_HOMO-LUMO.ipynb:
-![alt text](image-5.png)
+![alt text](images/image-5.png)
 
 (2) Then Multiwfn software is used to batch change the.mol format file into the.gJf format file input by Gaussian. The gjf file contains the molecular structure information and keywords that Gaussian can recognize;
 
@@ -112,9 +112,9 @@ echo "处理完成！"
 
 you can run the following code of 1-calculate_HOMO-LUMO.ipynb:
 
-![alt text](image-6.png)
+![alt text](images/image-6.png)
 
-![alt text](image-7.png)
+![alt text](images/image-7.png)
 
 Then, you will obtain the caluresults.txt file including the id, homo_energy, lumo_energy, gap,Hardness, Softness.
 
