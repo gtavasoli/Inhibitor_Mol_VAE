@@ -9,40 +9,40 @@ from transvae.tvae_util import *
 
 def vae_data_gen(mols, props, char_dict):
     """
-    将输入的SMILES字符串编码为带有标记ID的张量。
-    参数：
-        mols (np.array, 必需): 包含分子结构的数组
-        props (np.array, 必需): 包含标量化学属性值的数组
-        char_dict (字典, 必需): 将标记映射到整数ID的字典
-    返回：
-        encoded_data (torch.tensor): 包含每个SMILES字符串编码的张量
+    Encodes the input SMILES string into a tensor with tag IDs.
+    Parameters:
+        mols (np.array, required): array containing the molecular structure
+        props (np.array, required): array containing scalar chemical property values
+        char_dict (dict, required): dictionary mapping tags to integer IDs
+    Returns:
+        encoded_data (torch.tensor): a tensor containing the encoding of each SMILES string
     """
-    #print(mols)
-    smiles = mols[:,0]  # 提取SMILES字符串
+    # print(mols)
+    smiles = mols[:,0]  # Extract SMILES string
     #print(smiles)
-    if props is None:  # 如果未提供属性，创建一个全零的属性数组
+    if props is None:  # If no attributes are provided, create an all-zero attribute array
         props = np.zeros(smiles.shape)
-    del mols  # 删除原始的分子数组以节省内存
-    smiles = [tokenizer(x) for x in smiles]  # 对SMILES字符串进行分词
+    del mols  # Delete the original molecule array to save memory
+    smiles = [tokenizer(x) for x in smiles]  # Tokenize a SMILES string
     #print(smiles)
     print(len(smiles))
-    encoded_data = torch.empty((len(smiles), 136))  # 创建一个空的编码数据张量,其中224为SMILES分子式中token数量最长的
+    encoded_data = torch.empty((len(smiles), 136))  # Create an empty encoded data tensor, where 224 is the longest number of tokens in the SMILES formula.
     #print(encoded_data)
     for j, smi in enumerate(smiles):
-        #encoded_smi = encode_smiles(smi, 126, char_dict)  # 编码SMILES字符串
+        #encoded_smi = encode_smiles(smi, 126, char_dict)  # Encoding SMILES strings
         encoded_smi = encode_smiles(smi, 134, char_dict)  # 编码SMILES字符串
-        encoded_smi = [0] + encoded_smi  # 在编码前添加起始标记
+        encoded_smi = [0] + encoded_smi  # Add a start marker before encoding
         #print(len(encoded_smi))
-        encoded_data[j,:-1] = torch.tensor(encoded_smi)  # 填充编码数据张量
+        encoded_data[j,:-1] = torch.tensor(encoded_smi)  # Fill the encoded data tensor
         
         #print(props[j])
-       # encoded_data[j,-1] = torch.tensor(props[j])  # 添加属性值
+       # encoded_data[j,-1] = torch.tensor(props[j])  # Adding Property Values
        # print("encoded_data shape:", encoded_data.shape)
         #print("props[j] shape:", props[j].shape)
         #encoded_data[j,-1] = torch.tensor(props[j])
         
-        encoded_data[j,-1] = torch.tensor(props[j][0], dtype=torch.float)  # 将第一个属性值转换为张量，并添加到encoded_data张量的最后一列中
-        encoded_data[j,-2] = torch.tensor(props[j][1], dtype=torch.float)  # 将第二个属性值转换为张量，并添加到encoded_data张量的倒数第二列中
+        encoded_data[j,-1] = torch.tensor(props[j][0], dtype=torch.float)  # Convert the first attribute value to a tensor and add it to the last column of the encoded_data tensor
+        encoded_data[j,-2] = torch.tensor(props[j][1], dtype=torch.float)  # Convert the second attribute value to a tensor and add it to the second-to-last column of the encoded_data tensor
         encoded_data[j,-3] = torch.tensor(props[j][2], dtype=torch.float)
         encoded_data[j,-4] = torch.tensor(props[j][3], dtype=torch.float)
         encoded_data[j,-5] = torch.tensor(props[j][4], dtype=torch.float)
@@ -57,7 +57,7 @@ def vae_data_gen(mols, props, char_dict):
             #encoded_data[j,-8] = torch.tensor(props[j][7], dtype=torch.float)
         encoded_data[j,-9] = torch.tensor(props[j][8], dtype=torch.float)
         #print(encoded_data)
-    return encoded_data  # 返回编码后的数据
+    return encoded_data  # Returns the encoded data
 
 def make_std_mask(tgt, pad):
     """
